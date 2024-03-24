@@ -13,12 +13,12 @@ class Users(db.Model):
     password = db.Column(db.String, nullable=False)
 
     # relationship
-    florist_profile = db.relationship("Florists", back_populates="user")
+    florist = db.relationship("Florists", back_populates="user")
 
 class UsersSchema(ma.Schema):
     # define fields we want to deserialise
     class Meta:
-        fields = ("id", "name", "username", "password")
+        fields = ("user_id", "name", "username", "password")
 
 # to deserialise single user as a dict {}
 user_schema = UsersSchema(exclude=["password"])
