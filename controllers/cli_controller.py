@@ -21,7 +21,6 @@ def seed_tables():
             name="Michael Scott",
             username="michaelscott.admin",
             password=bcrypt.generate_password_hash("hunter2").decode("utf-8"),
-            is_admin=True
         ),
         Users(
             name="Angela Martin",

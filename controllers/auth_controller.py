@@ -24,7 +24,7 @@ def auth_register():
 
         # password from the request body
         password = body_data.get("password")
-        # before hashing, if password exists as non empty str, hash pw
+        # before hashing, if pass word exists as non empty str, hash pw
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
 

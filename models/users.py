@@ -1,4 +1,5 @@
 from init import db, ma
+from .florists import Florists
 
 # create our own model by making a class that exdends from the SQLAlchemy model class.
 class Users(db.Model):
@@ -10,12 +11,14 @@ class Users(db.Model):
     name = db.Column(db.String)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+
+    # relationship
+    florist_profile = db.relationship("Florists", back_populates="user")
 
 class UsersSchema(ma.Schema):
     # define fields we want to deserialise
     class Meta:
-        fields = ("id", "name", "username", "password", "is_admin")
+        fields = ("id", "name", "username", "password")
 
 # to deserialise single user as a dict {}
 user_schema = UsersSchema(exclude=["password"])
