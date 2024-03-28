@@ -6,7 +6,7 @@ from flask_jwt_extended import create_access_token
 from psycopg2 import errorcodes
 
 from init import db, bcrypt
-from models.users import Users, user_schema
+from models.florists import Florists, florist_schema
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -16,8 +16,8 @@ def auth_register():
         # the data we get in body of request
         body_data = request.get_json()
 
-        # create the user instance
-        user = Users(
+        # create the florist instance
+        florist = Florists(
             name=body_data.get("name"),
             username=body_data.get("username"),
         )
@@ -26,13 +26,13 @@ def auth_register():
         password = body_data.get("password")
         # before hashing, if pass word exists as non empty str, hash pw
         if password:
-            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            florist.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
-        # add and commit the user to db
-        db.session.add(user)
+        # add and commit the florist to db
+        db.session.add(florist)
         db.session.commit()
         # respond back to the client
-        return user_schema.dump(user), 201
+        return florist_schema.dump(florist), 201
     # give integrityerror a name (err) to access what is inside it
     except IntegrityError as err:
         # print the postgresql integrity error code
@@ -50,15 +50,15 @@ def auth_register():
 @auth_bp.route("/login", methods=["POST"])
 def auth_login():
     body_data = request.get_json()
-    # find user with username
-    stmt = db.select(Users).filter_by(username=body_data.get("username"))
+    # find florist with username
+    stmt = db.select(Florists).filter_by(username=body_data.get("username"))
     # convert this to scalar value
-    user = db.session.scalar(stmt)
-    # if user exist and pw correct
-    if user and bcrypt.check_password_hash(user.password, body_data.get("password")):
+    florist = db.session.scalar(stmt)
+    # if florist exist and pw correct
+    if florist and bcrypt.check_password_hash(florist.password, body_data.get("password")):
         # create jwt
-        token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=14))
+        token = create_access_token(identity=str(florist.florist_id), expires_delta=timedelta(days=14))
         # return token with user info
-        return {"username": user.username, "token": token, "is_admin": user.is_admin}
+        return {"username": florist.username, "token": token, "is_senior": florist.is_senior}
     else:
         return {"error": "invalid username or password"}, 401

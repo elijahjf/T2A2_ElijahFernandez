@@ -8,6 +8,10 @@ class OrderItems(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"))
     quantity = db.Column(db.Integer, default=1)
 
+    # relationships
+    order = db.relationship("Orders", back_populates="order_items")
+    product = db.relationship("Products", back_populates="order_items")
+
 class OrderItemsSchema(ma.Schema):
     class Meta:
         fields = ("order_item_id", "order_id", "product_id", "quantity")
