@@ -7,9 +7,9 @@ class Products(db.Model):
     product_id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
     price = db.Column(Numeric(precision=10, scale=2))
-    main_color = db.Column(db.String)
+    # main_color = db.Column(db.String)
     flower_origin = db.Column(Enum("native", "non_native", name="flower_origin_enum"))
 
 class ProductsSchema(ma.Schema):
     class Meta:
-        fields = ("product_id", "product_name", "price", "main_color", "flower_origin")
+        fields = ("product_id", "product_name", "price", "flower_origin")
