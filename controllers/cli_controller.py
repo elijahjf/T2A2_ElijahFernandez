@@ -1,6 +1,6 @@
 from flask import Blueprint
 from init import db, bcrypt
-from models.users import Users
+from models.florists import Florists
 
 db_commands = Blueprint("db", __name__)
 
@@ -16,31 +16,32 @@ def drop_tables():
 
 @db_commands.cli.command("seed")
 def seed_tables():
-    users = [
-        Users(
+    florists = [
+        Florists(
             name="Michael Scott",
             username="michaelscott.admin",
             password=bcrypt.generate_password_hash("hunter2").decode("utf-8"),
-            is_admin=True
+            is_senior=True
         ),
-        Users(
+        Florists(
             name="Angela Martin",
             username="angelamartin",
-            password=bcrypt.generate_password_hash("hunter2").decode("utf-8")           
+            password=bcrypt.generate_password_hash("hunter2").decode("utf-8"),
+            is_senior=True          
         ),
-        Users(
+        Florists(
             name="Erin Hannon",
             username="erinhannon",
             password=bcrypt.generate_password_hash("hunter2").decode("utf-8")        
         ),
-        Users(
+        Florists(
             name="Kevin Malone",
             username="kevinmalone",
             password=bcrypt.generate_password_hash("hunter2").decode("utf-8")          
         )
     ]
 
-    db.session.add_all(users)
+    db.session.add_all(florists)
     db.session.commit()
 
     print("tables seeded")
